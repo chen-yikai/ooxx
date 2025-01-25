@@ -16,7 +16,6 @@ namespace ooxx
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
             pointSize = 100; // 每個格子的大小
             gap = 10; // 格子之間的間距
             totalWidth = (pointSize * 3) + (gap * (3 - 1)); // 棋盤的寬度
@@ -42,15 +41,38 @@ namespace ooxx
                     playPoint.Click += new System.EventHandler(this.playPoint_Click);
                 }
             }
+            endTypeDisplay.AutoSize = false;
+            endTypeDisplay.Width = this.ClientSize.Width;
+            endTypeDisplay.Height = 50;
+            endTypeDisplay.TextAlign = ContentAlignment.MiddleCenter;
+            endTypeDisplay.Location = new Point(0, this.ClientSize.Height - 100);
+            endTypeDisplay.Text = "";
             // 崁入事件function
             Share.statusUpdated += statusUpdated;
             Share.gameEnd += gameEnd;
             // npc(電腦)先下
             npcPlay();
         }
+        private void endTypeUpdated()
+        {
+            switch (Share.endType)
+            {
+                case "user":
+                    endTypeDisplay.Text = "你贏了";
+                    break;
+                case "npc":
+                    endTypeDisplay.Text = "你輸了";
+                    break;
+                case "":
+                    endTypeDisplay.Text = "平手";
+                    break;
+            }
+        }
         private void gameEnd() // 遊戲結束
         {
+            endTypeUpdated();
             // 顯示繼續玩的按鈕
+            Share.isEnd = true;
             Button restart = new Button();
             restart.Text = "Play Again";
             restart.Location = new Point((this.ClientSize.Width / 2) - (restart.Width / 2), this.ClientSize.Height - restart.Height - 10);
@@ -61,6 +83,7 @@ namespace ooxx
         {
             Button restart = (Button)sender;
             this.Controls.Remove(restart);
+            endTypeDisplay.Text = "";
             Share.reset();
             npcPlay();
         }
@@ -68,29 +91,39 @@ namespace ooxx
         {
             for (int i = 0; i < 8; i++) // 有8條連成一條線的連線
             {
-                if (!Share.hasChecked.Contains(i)) // 如果這條連線還沒檢查過
+                int[] line = new int[3]; // 連成一條線的3個格子
+                for (int j = 0; j < 3; j++)
                 {
-                    int[] line = new int[3]; // 連成一條線的3個格子
-                    for (int j = 0; j < 3; j++)
+                    line[j] = Share.get(Share.rules[i, j, 0], Share.rules[i, j, 1]);
+                }
+                if (line[0] == line[1] && line[1] == line[2]) // 如果這條連線有連成一條線
+                {
+                    if (line[0] == 0) // 如果是玩家贏了
                     {
-                        line[j] = Share.get(Share.rules[i, j, 0], Share.rules[i, j, 1]);
+                        Share.userScore++;
+                        Share.endType = "user";
+                        gameEnd();
                     }
-                    if (line[0] == line[1] && line[1] == line[2]) // 如果這條連線有連成一條線
+                    else if (line[0] == 1) // 如果是npc贏了
                     {
-                        if (line[0] == 0) // 如果是玩家贏了
-                        {
-                            Share.userScore += 1;
-                            Share.hasChecked.Add(i); // 把這條連線加入已經檢查過的連線
-                        }
-                        else if (line[0] == 1) // 如果是npc贏了
-                        {
-                            Share.npcScore += 1;
-                            Share.hasChecked.Add(i); // 把這條連線加入已經檢查過的連線
-                        }
-                        // 更新計分板label分數
-                        npcScore.Text = Share.npcScore.ToString();
-                        userScore.Text = Share.userScore.ToString();
+                        Share.npcScore++;
+                        Share.endType = "npc";
+                        gameEnd();
                     }
+                    // 更新計分板label分數
+                    npcScore.Text = Share.npcScore.ToString();
+                    userScore.Text = Share.userScore.ToString();
+                }
+            }
+            if (!Share.isEnd)
+            {
+                if (Share.whoseTurn == 0)
+                {
+                    npcPlay();
+                }
+                else if (Share.whoseTurn == 1)
+                {
+                    Share.whoseTurn = 2;
                 }
             }
         }
@@ -133,6 +166,7 @@ namespace ooxx
                     }
                 }
             }
+            checkRules();
         }
         private void playPoint_Click(object sender, System.EventArgs e)
         {
@@ -140,11 +174,10 @@ namespace ooxx
             var first = int.Parse(playPoint.Name[0].ToString());
             var second = int.Parse(playPoint.Name[1].ToString());
 
-            if (Share.get(first, second) == 2) // 如果該格子是空的
+            if (Share.get(first, second) == 2 && !Share.isEnd) // 如果該格子是空的
             {
+                Share.whoseTurn = 0;
                 Share.set(first, second, 0); // 設定該格子為玩家
-                npcPlay();
-                checkRules();
             }
         }
         private void npcPlay()
@@ -156,12 +189,11 @@ namespace ooxx
                 int second = random.Next(0, 3);
                 if (Share.get(first, second) == 2) // 如果該格子是空的
                 {
+                    Share.whoseTurn = 1;
                     Share.set(first, second, 1); // 設定該格子為npc
                     break;
                 }
             }
-            // 檢查整個棋盤是否有人贏
-            checkRules();
         }
     }
 }

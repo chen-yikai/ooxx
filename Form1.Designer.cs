@@ -32,13 +32,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.userScore = new System.Windows.Forms.Label();
             this.npcScore = new System.Windows.Forms.Label();
+            this.endTypeDisplay = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 464);
+            this.label1.Location = new System.Drawing.Point(12, 458);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 36);
             this.label1.TabIndex = 1;
@@ -58,7 +59,7 @@
             // 
             this.userScore.AutoSize = true;
             this.userScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.userScore.Location = new System.Drawing.Point(12, 500);
+            this.userScore.Location = new System.Drawing.Point(13, 494);
             this.userScore.Name = "userScore";
             this.userScore.Size = new System.Drawing.Size(26, 29);
             this.userScore.TabIndex = 3;
@@ -68,11 +69,21 @@
             // 
             this.npcScore.AutoSize = true;
             this.npcScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.npcScore.Location = new System.Drawing.Point(444, 500);
+            this.npcScore.Location = new System.Drawing.Point(444, 494);
             this.npcScore.Name = "npcScore";
             this.npcScore.Size = new System.Drawing.Size(26, 29);
             this.npcScore.TabIndex = 4;
             this.npcScore.Text = "0";
+            // 
+            // endTypeDisplay
+            // 
+            this.endTypeDisplay.AutoSize = true;
+            this.endTypeDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.endTypeDisplay.Location = new System.Drawing.Point(228, 458);
+            this.endTypeDisplay.Name = "endTypeDisplay";
+            this.endTypeDisplay.Size = new System.Drawing.Size(26, 29);
+            this.endTypeDisplay.TabIndex = 5;
+            this.endTypeDisplay.Text = "0";
             // 
             // Form1
             // 
@@ -83,6 +94,7 @@
             this.Controls.Add(this.userScore);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.endTypeDisplay);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -98,6 +110,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label userScore;
         private System.Windows.Forms.Label npcScore;
+        private System.Windows.Forms.Label endTypeDisplay;
     }
 }
 
